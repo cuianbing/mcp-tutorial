@@ -57,6 +57,19 @@ website/
 
 构建时会自动同步根目录教程 Markdown、生成 `guide/` 并复制 `lab` 源码，无需把生成内容提交到仓库。
 
+## 部署到 Vercel
+
+`website/vercel.json` 已固定构建命令与输出目录，项目 Root Directory 设为 `website` 即可：
+
+| 配置项 | 值 |
+|---|---|
+| Root Directory | `website` |
+| Build Command | `npm run build` |
+| Output Directory | `.vitepress/dist` |
+| Node.js | 22 |
+
+配置中的 `cleanUrls: true` 会让访问地址不带 `.html`。如果之前在 Vercel 项目设置里手动填过 Output Directory（例如 `dist`），请清空或改为 `.vitepress/dist`，然后重新部署。
+
 ## 发布为在线站点
 
 构建产物是纯静态文件，`website/.vitepress/dist/` 整个目录可直接部署到任意静态托管。
