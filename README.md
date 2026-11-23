@@ -38,14 +38,19 @@ graph LR
     H --> I
     I --> J["10 Linux 部署实战<br/>systemd / nginx / Docker"]
     J --> K["11 多用户隔离<br/>与无状态扩展"]
+    K --> L["12 分页 / 取消 / 多模态"]
+    L --> M["13 测试与质量保障"]
+    M --> N["14 MCP Apps 与扩展"]
+    N --> O["15 生产级数据库集成"]
 ```
 
 - **入门线（01→02）**：什么都不懂也能跟着做完第一个能跑的服务器。
 - **协议线（03→04）**：搞懂 MCP 底下的消息世界，这是"深入理解"的分水岭。
 - **进阶线（05→07）**：工程化开发服务器和客户端，覆盖官方 SDK 全部能力。
-- **实战线（08→09）**：安全加固、生态选型、发布到官方 Registry。
+- **实战线（08→11）**：安全加固、生态选型、发布、部署、多用户隔离。
+- **深水线（12→15）**：分页/取消/多模态、测试与 CI、扩展生态、数据库集成 capstone。
 
-## 版本约定（2026-11-19 核实）
+## 版本约定（2026-11-23 核实）
 
 本系列所有代码在以下版本组合上**实际运行验证过**，请尽量保持一致：
 
@@ -54,6 +59,7 @@ graph LR
 | MCP 协议 | `2026-07-28` | 最新正式版（本系列主线）；历史版本：`2024-11-05`、`2025-03-26`、`2025-06-18`、`2025-11-25` |
 | TypeScript SDK | `@modelcontextprotocol/server` `2.4.0`<br>`@modelcontextprotocol/client` `2.4.0`<br>`@modelcontextprotocol/node` `2.1.2` | SDK v2 已把 server / client 拆成两个包；旧的 v1 线 `@modelcontextprotocol/sdk`（1.32.2）不再推荐 |
 | MCP Inspector | `@modelcontextprotocol/inspector` `2.16.0` | 官方调试工具，支持 `--protocol-era modern/legacy` 双时代测试 |
+| MCP Apps SDK（14 篇） | `@modelcontextprotocol/ext-apps` `2.0.4` | `registerAppTool` / `registerAppResource` / `RESOURCE_MIME_TYPE` |
 | Node.js | `v22.23.1`（实测） | 要求 ≥ 20；Windows 10 实测 |
 | Python SDK（对照篇） | `mcp` `2.3.0` | Python ≥ 3.10，2026-10-02 发布 |
 | Java SDK（对照篇） | Spring AI MCP starter | 协议 `2025-11-25`，**尚未支持 2026-07-28** |
@@ -79,8 +85,26 @@ lab/
     ├── sdk-client.mjs            # 07 篇：官方 SDK 客户端
     ├── probe-extra.mjs           # 05 篇：extra 参数/进度/结构化输出探针
     ├── probe-elicitation-*.mjs   # 06 篇：Elicitation/MRTR 双端探针
-    └── todo-server-multiuser.mjs # 11 篇：多用户隔离 + SQLite 状态外置
+    ├── todo-server-multiuser.mjs # 11 篇：多用户隔离 + SQLite 状态外置
+    ├── probe-pagination-*.mjs    # 12 篇：协议级分页行为探针
+    ├── probe-content-types.mjs   # 12 篇：应用层分页 + 图片/资源链接/内嵌资源
+    ├── probe-cancel-server.mjs   # 12 篇：取消（断流）实测
+    ├── probe-validation.mjs      # 13 篇：参数校验返回 isError 的探针
+    ├── probe-app-server.mjs      # 14 篇：MCP App（ui:// 资源 + _meta.ui）
+    └── todo-server-db.mjs        # 15 篇：DB 集成（分层 + 分页 + 检索 + 多租户）
 ```
+
+配套测试（13 篇）：
+
+```
+lab/test/
+├── todo.test.mjs        # 9 个用例：清单契约/行为/错误语义/参数校验
+└── agent-loop.test.mjs  # 2 个用例：假模型驱动的 Agent 循环
+```
+
+一条命令跑完全部测试：`cd lab && node --test`（实测 11/11 通过）。
+
+> 关于"哪些跑过、哪些是模板"：01~14 篇的代码均在本机（Windows 10 + Node v22.23.1）实测；15 篇的 **PostgreSQL / RLS / pgvector 部分是标准写法模板**（本机无 Docker/PostgreSQL，未实地验证），SQLite 链路已实测。每篇内部都有明确标注。
 
 快速体验（在 `lab/` 目录下）：
 
@@ -105,9 +129,34 @@ node src/mini-client.mjs build/todo-server.js    # 手写客户端对话服务�
 | 09 | [生态、发布与多语言](09-生态发布与多语言.md) | 官方服务器地图、发布到 Registry、Java/Python/Go/Rust 对照 |
 | 10 | [Linux 部署实战](10-Linux部署MCP服务器.md) | systemd 守护、nginx/Caddy + HTTPS、认证分发、升级与容器化，部署成团队服务 |
 | 11 | [多用户隔离与无状态扩展](11-多用户隔离与无状态扩展.md) | `authInfo` 多租户、数据/工具面/资源四层隔离、SQLite 状态外置、水平扩展 |
+| 12 | [分页、取消与大结果](12-分页取消与大结果多模态.md) | 协议级 vs 应用级分页、断流即取消（含接线坑）、多模态内容四种形态 |
+| 13 | [测试与质量保障](13-测试与质量保障.md) | 四层测试金字塔、`node:test` 11 个用例、假模型 Agent 测试、CI 门禁 |
+| 14 | [MCP Apps 与扩展生态](14-MCPApps与扩展生态.md) | 扩展协商机制、`ui://` 与 `_meta.ui`（实测）、CIMD vs DCR 授权注册 |
+| 15 | [生产级数据库集成](15-生产级数据库集成.md) | 三层架构、行级安全 RLS、pgvector 语义检索、混合检索（SQLite 实测） |
 
 ---
 
-**建议**：01 是纯理论，可以快速过；02 必须动手；03 是全系列的灵魂——哪怕后面跳读，也请务必读完 03。
+## 与 microsoft/mcp-for-beginners 的覆盖对照
+
+常被问"它有 12 个模块，我们 15 篇够全吗"。按能力对账（不是按文件数）：
+
+| 微软课程模块 | 本系列 | 说明 |
+|---|---|---|
+| 00 介绍 / 01 核心概念 / 1.1 2026-07-28 变化 | 01、03、06 | 我们多了**手写协议层实现**与双 era 对照 |
+| 02 安全 / 2.1 CIMD+DCR | 08、14 | 08 讲威胁模型，14 补 CIMD/DCR 注册 |
+| 03 入门（3.1~3.15，含 Testing/Deployment/Inspector/Hosts/Apps） | 02、04、07、10、13、14 | **Testing 与 Apps 已单独成篇** |
+| 04 实践 / 4.1 分页 | 05、12 | 12 篇补分页（含"SDK 不分页"实测） |
+| 05 进阶（多模态/路由/缩放/自定义传输/取消/progress） | 05、11、12 | 多模态、取消已补；自定义传输见 04 篇传输层原理 |
+| 06 社区贡献 / 07 早期洞察 / 09 案例研究 | 09 | 我们侧重 Registry 发布与选型；案例以 lab 项目串讲 |
+| 08 最佳实践（性能/容错） | 08、10、13 | 拆到安全/部署/测试三篇 |
+| 10 工作坊 / 11 数据库集成（13 labs） | lab/ + 15 | 15 篇对标其 capstone |
+| 12 Tooling（Copilot App） | — | 厂商专属，刻意不覆盖 |
+
+**我们刻意不覆盖的**：Azure / Entra ID / Foundry / Copilot App 等 Microsoft 生态专属内容（换成通用 systemd/nginx/Docker + OIDC 原理）；它们的多语言示例（我们给 Java/Python/Go/Rust 对照与选型，TS 为主线）。
+**我们额外更深的**：协议层手写实现、curl 裸调报文、双时代兼容、Linux 生产部署、多用户隔离、可运行测试套件、扩展协商与 CIMD/DCR。
+
+---
+
+**建议**：01 是纯理论，可以快速过；02 必须动手；03 是全系列的灵魂——哪怕后面跳读，也请务必读完 03。要上线的话，10~15 是必读线。
 
 *本系列参考并整合了 [MCP 官方文档](https://modelcontextprotocol.io)、[官方规范 2026-07-28](https://modelcontextprotocol.io/specification)、[microsoft/mcp-for-beginners](https://github.com/microsoft/mcp-for-beginners)、[punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) 等公开资料，结合实测重写。每篇末尾附参考链接。*
