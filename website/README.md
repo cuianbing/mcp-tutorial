@@ -1,6 +1,6 @@
 # MCP 开发教程 · VitePress 站点
 
-把仓库根目录的 11 篇 Markdown 教程构建成在线教程站点。使用 VitePress 1.x + Mermaid 11，支持全文搜索、深色模式、代码高亮与流程图渲染。
+把仓库根目录的 15 篇 Markdown 教程构建成在线教程站点。使用 VitePress 1.x + Mermaid 11，支持全文搜索、深色模式、代码高亮与流程图渲染。
 
 ## 快速开始
 
@@ -13,7 +13,7 @@ npm run dev          # 开发模式，默认 http://localhost:5173
 构建与预览生产版本：
 
 ```powershell
-npm run build        # 先同步内容，再产出静态站点到 .vitepress/dist
+npm run build        # 先同步内容，再产出静态站点到 dist
 npm run preview      # 预览构建结果，默认 http://localhost:4173
 ```
 
@@ -26,6 +26,7 @@ website/
 │   └── theme/               # 自定义主题与样式
 ├── scripts/sync-content.mjs # 把仓库根目录教程同步成站点内容
 ├── guide/                   # 由脚本生成，勿手改
+├── dist/                    # 构建产物，已 gitignore
 ├── public/
 │   ├── logo.svg
 │   └── lab/                 # 由脚本从 ../lab 复制，供在线下载配套代码
@@ -44,35 +45,44 @@ website/
 
 因此**请始终修改仓库根目录的原始 Markdown**，不要直接改 `guide/`；改完重新执行 `npm run build` 即可。
 
-## 部署到 Netlify
+## 通用部署契约（所有平台一致）
 
-仓库根目录已提供 `netlify.toml`，在 Netlify 导入仓库后无需手动填写：
+无论 Vercel、Netlify 还是 Cloudflare Pages，都只需下面四个值，`website/dist` 就是完整静态站点：
 
 | 配置项 | 值 |
 |---|---|
-| Base directory | `website` |
-| Build command | `npm run build` |
-| Publish directory | `.vitepress/dist` |
-| Node.js | 22（已由 `netlify.toml` 指定） |
+| 项目根目录（Root / Base） | `website` |
+| 构建命令 | `npm run build` |
+| 输出目录 | `dist` |
+| Node.js | 22 |
 
-构建时会自动同步根目录教程 Markdown、生成 `guide/` 并复制 `lab` 源码，无需把生成内容提交到仓库。
+仓库内的 `netlify.toml`、`website/vercel.json` 只是把上面这组值写成文件，内容与表格一致；Cloudflare Pages 在控制台填同样四个值即可，不需要额外的平台配置。
+
+## 部署到 Netlify
+
+`netlify.toml` 已固定上表中的值，导入仓库后无需手动填写。
 
 ## 部署到 Vercel
 
-`website/vercel.json` 已固定构建命令与输出目录，项目 Root Directory 设为 `website` 即可：
+`website/vercel.json` 已固定构建命令与输出目录。项目 Root Directory 设为 `website`，Output Directory 保持 `dist` 即可。
+
+## 部署到 Cloudflare Pages
+
+导入仓库后填写：
 
 | 配置项 | 值 |
 |---|---|
-| Root Directory | `website` |
-| Build Command | `npm run build` |
-| Output Directory | `.vitepress/dist` |
-| Node.js | 22 |
+| Framework preset | None |
+| Root directory | `website` |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| 环境变量 | `NODE_VERSION=22` |
 
-配置中的 `cleanUrls: true` 会让访问地址不带 `.html`。如果之前在 Vercel 项目设置里手动填过 Output Directory（例如 `dist`），请清空或改为 `.vitepress/dist`，然后重新部署。
+Cloudflare Pages 默认支持无 `.html` 的地址，站内链接可直接访问。
 
 ## 发布为在线站点
 
-构建产物是纯静态文件，`website/.vitepress/dist/` 整个目录可直接部署到任意静态托管。
+构建产物是纯静态文件，`website/dist/` 整个目录可直接部署到任意静态托管。
 
 - **部署在子路径**（如 `https://example.com/mcp-tutorial/`）时，构建前设置环境变量：
 

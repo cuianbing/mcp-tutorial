@@ -21,6 +21,10 @@ const chapters = [
   { src: '09-生态发布与多语言.md', slug: '09-ecosystem', title: '09 生态、发布与多语言' },
   { src: '10-Linux部署MCP服务器.md', slug: '10-linux-deploy', title: '10 Linux 部署实战' },
   { src: '11-多用户隔离与无状态扩展.md', slug: '11-multiuser', title: '11 多用户隔离与无状态扩展' },
+  { src: '12-分页取消与大结果多模态.md', slug: '12-pagination', title: '12 分页、取消与大结果' },
+  { src: '13-测试与质量保障.md', slug: '13-testing', title: '13 测试与质量保障' },
+  { src: '14-MCPApps与扩展生态.md', slug: '14-apps', title: '14 MCP Apps 与扩展生态' },
+  { src: '15-生产级数据库集成.md', slug: '15-database', title: '15 生产级数据库集成' },
 ]
 
 const chapterMap = new Map(chapters.map((c) => [c.src, `/guide/${c.slug}`]))

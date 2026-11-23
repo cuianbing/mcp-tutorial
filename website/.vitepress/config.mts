@@ -6,9 +6,10 @@ export default withMermaid(
     lang: 'zh-CN',
     title: 'MCP 开发教程',
     description:
-      'Model Context Protocol 开发实战教程：以 2026-07-28 最新协议为主线，从零基础到深入理解，11 篇完整闭环，代码全部实测可运行。',
+      'Model Context Protocol 开发实战教程：以 2026-07-28 最新协议为主线，从零基础到深入理解，15 篇完整闭环，代码全部实测可运行。',
     cleanUrls: true,
     base: process.env.BASE_URL || '/',
+    outDir: 'dist',
     ignoreDeadLinks: false,
     head: [
       ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
@@ -65,6 +66,15 @@ export default withMermaid(
           items: [
             { text: '10 Linux 部署实战', link: '/guide/10-linux-deploy' },
             { text: '11 多用户隔离与无状态扩展', link: '/guide/11-multiuser' },
+          ],
+        },
+        {
+          text: '深水与实战',
+          items: [
+            { text: '12 分页、取消与大结果', link: '/guide/12-pagination' },
+            { text: '13 测试与质量保障', link: '/guide/13-testing' },
+            { text: '14 MCP Apps 与扩展生态', link: '/guide/14-apps' },
+            { text: '15 生产级数据库集成', link: '/guide/15-database' },
           ],
         },
       ],
