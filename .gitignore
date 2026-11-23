@@ -4,6 +4,7 @@
 # VitePress 构建产物与自动生成内容
 website/.vitepress/cache/
 website/dist/
+/dist/
 website/guide/
 website/public/lab/
 

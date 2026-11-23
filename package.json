@@ -1,0 +1,14 @@
+{
+  "name": "mcp-tutorial",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MCP 开发系列教程及其 VitePress 站点",
+  "scripts": {
+    "build": "npm --prefix website ci && npm --prefix website run build",
+    "dev": "npm --prefix website run dev --",
+    "preview": "npm --prefix website run preview --"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

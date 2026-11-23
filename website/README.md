@@ -13,7 +13,7 @@ npm run dev          # 开发模式，默认 http://localhost:5173
 构建与预览生产版本：
 
 ```powershell
-npm run build        # 先同步内容，再产出静态站点到 dist
+npm run build        # 先同步内容，再产出静态站点到仓库根目录 dist/
 npm run preview      # 预览构建结果，默认 http://localhost:4173
 ```
 
@@ -26,7 +26,6 @@ website/
 │   └── theme/               # 自定义主题与样式
 ├── scripts/sync-content.mjs # 把仓库根目录教程同步成站点内容
 ├── guide/                   # 由脚本生成，勿手改
-├── dist/                    # 构建产物，已 gitignore
 ├── public/
 │   ├── logo.svg
 │   └── lab/                 # 由脚本从 ../lab 复制，供在线下载配套代码
@@ -47,16 +46,15 @@ website/
 
 ## 通用部署契约（所有平台一致）
 
-无论 Vercel、Netlify 还是 Cloudflare Pages，都只需下面四个值，`website/dist` 就是完整静态站点：
+无论 Vercel、Netlify 还是 Cloudflare Pages，都只需下面三个值，仓库根目录的 `dist/` 就是完整静态站点：
 
 | 配置项 | 值 |
 |---|---|
-| 项目根目录（Root / Base） | `website` |
+| 项目根目录（Root / Base） | 仓库根目录（默认，不用填） |
 | 构建命令 | `npm run build` |
 | 输出目录 | `dist` |
-| Node.js | 22 |
 
-仓库内的 `netlify.toml`、`website/vercel.json` 只是把上面这组值写成文件，内容与表格一致；Cloudflare Pages 在控制台填同样四个值即可，不需要额外的平台配置。
+根目录 `package.json` 的 `build` 脚本会自动安装 `website` 依赖并构建；仓库根目录的 `netlify.toml`、`vercel.json` 只是把上面这组值写成文件，内容与表格一致。Cloudflare Pages 在控制台填同样两个值即可，不需要额外的平台配置。
 
 ## 部署到 Netlify
 
@@ -64,7 +62,7 @@ website/
 
 ## 部署到 Vercel
 
-`website/vercel.json` 已固定构建命令与输出目录。项目 Root Directory 设为 `website`，Output Directory 保持 `dist` 即可。
+`vercel.json` 已固定构建命令与输出目录。项目 Root Directory 保持默认（仓库根目录），Output Directory 为 `dist`。如果之前把 Root Directory 设成了 `website`，请改回默认。
 
 ## 部署到 Cloudflare Pages
 
@@ -73,7 +71,7 @@ website/
 | 配置项 | 值 |
 |---|---|
 | Framework preset | None |
-| Root directory | `website` |
+| Root directory | 留空（默认仓库根目录） |
 | Build command | `npm run build` |
 | Build output directory | `dist` |
 | 环境变量 | `NODE_VERSION=22` |
@@ -82,7 +80,7 @@ Cloudflare Pages 默认支持无 `.html` 的地址，站内链接可直接访问
 
 ## 发布为在线站点
 
-构建产物是纯静态文件，`website/dist/` 整个目录可直接部署到任意静态托管。
+构建产物是纯静态文件，仓库根目录的 `dist/` 整个目录可直接部署到任意静态托管。
 
 - **部署在子路径**（如 `https://example.com/mcp-tutorial/`）时，构建前设置环境变量：
 

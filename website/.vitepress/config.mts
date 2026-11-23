@@ -9,7 +9,7 @@ export default withMermaid(
       'Model Context Protocol 开发实战教程：以 2026-07-28 最新协议为主线，从零基础到深入理解，15 篇完整闭环，代码全部实测可运行。',
     cleanUrls: true,
     base: process.env.BASE_URL || '/',
-    outDir: 'dist',
+    outDir: '../dist',
     ignoreDeadLinks: false,
     head: [
       ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
