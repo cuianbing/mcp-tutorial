@@ -1,6 +1,6 @@
 # MCP 开发教程 · VitePress 站点
 
-把仓库根目录的 15 篇 Markdown 教程构建成在线教程站点。使用 VitePress 1.x + Mermaid 11，支持全文搜索、深色模式、代码高亮与流程图渲染。
+把仓库根目录的 15 篇 Markdown 教程构建成在线教程站点。使用 VitePress 1.x + Mermaid 11，支持全文搜索、深色模式、代码高亮与可缩放/全屏查看的流程图。
 
 ## 快速开始
 
@@ -108,5 +108,5 @@ Cloudflare Pages 默认支持无 `.html` 的地址，站内链接可直接访问
 ## 维护提示
 
 - 教程新增章节时，在 `scripts/sync-content.mjs` 的 `chapters` 数组和 `.vitepress/config.mts` 的 `sidebar` 中各加一项。
-- Mermaid 图表在浏览器端渲染；深色模式下已加浅色底衬，保证节点文字可读。
+- Mermaid 图表由 `vitepress-mermaid-renderer` 在浏览器端渲染，支持放大、缩小、重置和全屏查看；图表进入视口时才初始化，深色模式会自动切换 Mermaid 主题。
 - 站内搜索为 VitePress 本地搜索，构建时生成索引，无需额外服务。

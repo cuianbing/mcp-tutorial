@@ -1,8 +1,6 @@
 import { defineConfig } from 'vitepress'
-import { withMermaid } from 'vitepress-plugin-mermaid'
 
-export default withMermaid(
-  defineConfig({
+export default defineConfig({
     lang: 'zh-CN',
     title: 'MCP 开发教程',
     description:
@@ -116,7 +114,4 @@ export default withMermaid(
       theme: { light: 'github-light', dark: 'github-dark' },
       languageAlias: { caddyfile: 'nginx' },
     },
-    mermaid: { theme: 'neutral' },
-    mermaidPlugin: { class: 'mermaid' },
-  }),
-)
+  })

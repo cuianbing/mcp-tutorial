@@ -37,17 +37,13 @@
   white-space: nowrap;
 }
 
-/* Mermaid 图：可横向滚动，深色模式下加白色底衬保证可读 */
-.mermaid {
+/* Mermaid 交互图表由 vitepress-mermaid-renderer 渲染，去掉外层代码块底色 */
+.vp-doc .language-mermaid {
   margin: 20px 0;
-  overflow-x: auto;
-  text-align: center;
-}
-
-.dark .mermaid {
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 12px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  overflow: visible;
 }
 
 /* 首页 hero 下方的说明文字与特性卡片对齐 */
